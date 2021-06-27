@@ -41,6 +41,22 @@ void suspend_wakeup_init_user(void) {
 #endif  // RGB_MATRIX_ENABLE
 }
 
+#ifdef RGB_MATRIX_ENABLE
+void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (host_keyboard_led_state().caps_lock) {
+        HSV hsv = {HSV_RED};
+        hsv.v = rgb_matrix_get_val();
+        RGB rgb = hsv_to_rgb(hsv);
+
+        for (uint8_t i = led_min; i < led_max; i++) {
+            if (HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)) {
+                RGB_MATRIX_INDICATOR_SET_COLOR(i, rgb.r, rgb.g, rgb.b);
+            }
+        }
+    }
+}
+#endif  // RGB_MATRIX_ENABLE
+
 // void keyboard_pre_init_user(void) {
 //     userspace_config.raw = eeconfig_read_user();
 // }

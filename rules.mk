@@ -6,10 +6,14 @@ RGB_MATRIX_ENABLE = yes
 RAW_ENABLE = no
 CONSOLE_ENABLE = yes
 
-WPM_ENABLE = yes
+WPM_ENABLE = no
 
 SRC += utils.c
 SRC += mike1808.c
 SRC += process_record.c
 SRC += encoder.c
-SRC += fun.c
+
+ifeq ($(strip $(WPM_ENABLE)), yes)
+	SRC += fun.c
+endif
+
