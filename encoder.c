@@ -1,0 +1,67 @@
+#include "encoder.h"
+#include "mike1808.h"
+#include "print.h"
+#include "util.h"
+
+typedef void (*encoder_callback)(void);
+
+static uint8_t state = ENCODER_DEFAULT;
+
+// clang-format off
+const encoder_callback encoder_mapping[][2] = {
+    [ENCODER_VOLUME] = {&volume_up, &volume_down},
+    [ENCODER_RGB_HUE] = {&rgb_matrix_increase_hue_noeeprom, &rgb_matrix_decrease_hue_noeeprom},
+    [ENCODER_RGB_SAT] = {&rgb_matrix_increase_sat_noeeprom, &rgb_matrix_decrease_sat_noeeprom},
+    [ENCODER_RGB_VAL] = {&rgb_matrix_increase_val_noeeprom, &rgb_matrix_decrease_val_noeeprom},
+    [ENCODER_RGB_EFFECT] = {&rgb_matrix_step_noeeprom, &rgb_matrix_step_reverse_noeeprom},
+};
+
+// clang-format on
+
+void volume_up() {
+    tap_code(KC_VOLU);
+}
+
+void volume_down() {
+    tap_code(KC_VOLD);
+}
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    dprintf("current encoder state is: %d\n", state);
+
+    if (clockwise) {
+        (*encoder_mapping[state][0])();
+    } else {
+        (*encoder_mapping[state][1])();
+    }
+    return true;
+}
+
+bool process_record_encoder(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_RGB_ENC_HUE ... KC_RGB_ENC_EFFECT:
+            if (record->event.pressed) {
+                switch (keycode) {
+                    case KC_RGB_ENC_HUE:
+                        state = ENCODER_RGB_HUE;
+                        break;
+                    case KC_RGB_ENC_SAT:
+                        state = ENCODER_RGB_SAT;
+                        break;
+                    case KC_RGB_ENC_VAL:
+                        state = ENCODER_RGB_VAL;
+                        break;
+                    case KC_RGB_ENC_EFFECT:
+                        state = ENCODER_RGB_EFFECT;
+                        break;
+                }
+            } else {
+                state = ENCODER_DEFAULT;
+                store_rgb_state_to_eeprom();
+            }
+
+            return false;
+    }
+
+    return true;
+}
