@@ -27,12 +27,15 @@ enum custom_keycodes {
     KC_RGB_ENC_HUE,
     KC_RGB_ENC_SAT,
     KC_RGB_ENC_VAL,
+    KC_RGB_ENC_EFFECT_SPEED,
     KC_RGB_ENC_EFFECT,
+
+    KC_WPM_RGB,
 };
 
 enum git_macros {
     // The start of this enum should always be equal to end of ctrl_keycodes + 1
-    G_INIT = KC_RGB_ENC_EFFECT + 1,  // git init
+    G_INIT = KC_WPM_RGB + 1,  // git init
     G_CLONE,                   // git clone
     G_CONF,                    // git config --global
     G_ADD,                     // git add
@@ -66,6 +69,9 @@ enum combos {
 #define KC_RGBS KC_RGB_ENC_SAT
 #define KC_RGBV KC_RGB_ENC_VAL
 #define KC_RGBE KC_RGB_ENC_EFFECT
+#define KC_RGBP KC_RGB_ENC_EFFECT_SPEED
+
+#define KC_WRGB KC_WPM_RGB
 
 #define KC_LINX KC_LINUX
 

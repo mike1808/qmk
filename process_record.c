@@ -5,6 +5,7 @@ uint16_t copy_paste_timer;
 
 __attribute__((weak)) bool process_record_secrets(uint16_t keycode, keyrecord_t *record) { return true; }
 __attribute__((weak)) bool process_record_encoder(uint16_t keycode, keyrecord_t *record) { return true; }
+__attribute__((weak)) bool process_record_fun(uint16_t keycode, keyrecord_t *record) { return true; }
 
 static const char *git_commands[] = {
     "git init ", "git clone ", "git config --global ", "git add ", "git diff ", "git reset ", "git rebase ", "git branch -b \"", "git checkout ", "git merge ", "git remote add ", "git fetch ", "git pull ", "git push ", "git commit ", "git status ", "git log ",
@@ -52,7 +53,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
             }
             break;
+#ifdef RGB_MATRIX_ENABLE
+        case RGB_TOG:
+            if (record->event.pressed) {
+                switch (rgb_matrix_get_flags()) {
+                    case LED_FLAG_ALL: {
+                        rgb_matrix_set_flags(LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER);
+                        rgb_matrix_set_color_all(0, 0, 0);
+                    } break;
+                    case LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER: {
+                        rgb_matrix_set_flags(LED_FLAG_UNDERGLOW);
+                        rgb_matrix_set_color_all(0, 0, 0);
+                    } break;
+                    case LED_FLAG_UNDERGLOW: {
+                        // This line is for LED idle timer. It disables the toggle so you can turn off LED completely if you like
+                        rgb_matrix_set_flags(LED_FLAG_NONE);
+                        rgb_matrix_disable();
+                    } break;
+                    default: {
+                        rgb_matrix_set_flags(LED_FLAG_ALL);
+                        rgb_matrix_enable();
+                    } break;
+                }
+            }
+            return false;
+#endif // RGB_MATRIX_ENABLE
     }
 
-    return process_record_encoder(keycode, record) && process_record_secrets(keycode, record);
+    return process_record_encoder(keycode, record) && process_record_secrets(keycode, record) && process_record_fun(keycode, record);
 }

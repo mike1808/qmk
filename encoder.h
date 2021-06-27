@@ -3,6 +3,7 @@ enum encoder_state {
     ENCODER_RGB_HUE,
     ENCODER_RGB_SAT,
     ENCODER_RGB_VAL,
+    ENCODER_RGB_EFFECT_SPEED,
     ENCODER_RGB_EFFECT,
 };
 
