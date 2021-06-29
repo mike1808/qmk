@@ -5,7 +5,7 @@
 #ifdef RGB_MATRIX_LEDMAPS_ENABLED
 extern const uint8_t ledmaps[][MATRIX_ROWS][MATRIX_COLS][3];
 
-void set_layer_rgb(int layer);
+void set_layer_rgb(uint8_t led_min, uint8_t led_max, int layer);
 
 #define RED {HSV_RED}
 #define CORAL {HSV_CORAL}
@@ -29,3 +29,4 @@ void set_layer_rgb(int layer);
 #endif  // RGB_MATRIX_LEDMAPS_ENABLED
 
 void rgb_matrix_indicators_keymap(void);
+void rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max);

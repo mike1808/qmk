@@ -42,7 +42,7 @@ void suspend_wakeup_init_user(void) {
 }
 
 #ifdef RGB_MATRIX_ENABLE
-void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+void rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
     if (host_keyboard_led_state().caps_lock) {
         HSV hsv = {HSV_RED};
         hsv.v = rgb_matrix_get_val();
