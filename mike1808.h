@@ -1,5 +1,6 @@
 #pragma once
 #include QMK_KEYBOARD_H
+#include "rgb_matrix_ledmaps.h"
 
 enum layout_names {
     LINUX = 0,  // Base Layout: The main keyboard layout that has all the characters

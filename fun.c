@@ -6,7 +6,7 @@
 static bool wpm_rgb_enabled = false;
 static uint8_t rgb_mode;
 
-void rgb_matrix_indicators_user(void) {
+void rgb_matrix_indicators_keymap(void) {
     if (wpm_rgb_enabled && rgb_matrix_is_enabled()) {
         uint8_t wpm = get_current_wpm();
         dprintf("WPM = %d\n", wpm);
