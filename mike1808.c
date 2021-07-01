@@ -10,12 +10,6 @@ static const char *const secret[] = {"test1", "test2", "test3", "test4", "test5"
 
 // userspace_config_t userspace_config;
 
-const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
-
-combo_t key_combos[COMBO_COUNT] = {
-    [JK_ESC] = COMBO(jk_combo, KC_ESC),
-};
-
 bool process_record_secrets(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_SECRET_1 ... KC_SECRET_5:  // Secrets!  Externally defined strings, not stored in repo
@@ -57,12 +51,3 @@ void rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) {
 }
 #endif  // RGB_MATRIX_ENABLE
 
-// void keyboard_pre_init_user(void) {
-//     userspace_config.raw = eeconfig_read_user();
-// }
-
-// void eeconfig_init_user(void) {
-//     userspace_config.raw              = 0;
-//     userspace_config.os_target = _OS_LINUX;
-//     eeconfig_update_user(userspace_config.raw);
-// }

@@ -80,7 +80,7 @@ enum combos {
 #define KC_RST KC_RESET
 
 #define OS_GIT OSL(GIT)
-#define TT_FN TT(FUNCTIONS)
+#define TT_FN MO(FUNCTIONS)
 #define FN_LOCK TG(FN_LOCK_LAYER)
 
 #define OS_LGUI OSM(MOD_LGUI)

@@ -3,18 +3,30 @@
 
 uint16_t copy_paste_timer;
 
-__attribute__((weak)) bool process_record_secrets(uint16_t keycode, keyrecord_t *record) { return true; }
-__attribute__((weak)) bool process_record_encoder(uint16_t keycode, keyrecord_t *record) { return true; }
-__attribute__((weak)) bool process_record_fun(uint16_t keycode, keyrecord_t *record) { return true; }
+__attribute__((weak)) bool process_record_secrets(uint16_t keycode, keyrecord_t *record) {
+    return true;
+}
+__attribute__((weak)) bool process_record_encoder(uint16_t keycode, keyrecord_t *record) {
+    return true;
+}
+__attribute__((weak)) bool process_record_fun(uint16_t keycode, keyrecord_t *record) {
+    return true;
+}
 
 static const char *git_commands[] = {
-    "git init ", "git clone ", "git config --global ", "git add ", "git diff ", "git reset ", "git rebase ", "git branch -b \"", "git checkout ", "git merge ", "git remote add ", "git fetch ", "git pull ", "git push ", "git commit ", "git status ", "git log ",
+    "git init ",     "git clone ", "git config --global ", "git add ",
+    "git diff ",     "git reset ", "git rebase ",          "git branch -b \"",
+    "git checkout ", "git merge ", "git remote add ",      "git fetch ",
+    "git pull ",     "git push ",  "git commit ",          "git status ",
+    "git log ",
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // If console is enabled, it will print the matrix position and status of each key pressed
 #ifdef KEYLOGGER_ENABLE
-    uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %b, time: %5u, int: %b, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+    uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %b, time: %5u, int: %b, count: %u\n",
+            keycode, record->event.key.col, record->event.key.row, record->event.pressed,
+            record->event.time, record->tap.interrupted, record->tap.count);
 #endif  // KEYLOGGER_ENABLE
     switch (keycode) {
         case KC_LINUX ... KC_WIN:
@@ -66,7 +78,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         rgb_matrix_set_color_all(0, 0, 0);
                     } break;
                     case LED_FLAG_UNDERGLOW: {
-                        // This line is for LED idle timer. It disables the toggle so you can turn off LED completely if you like
+                        // This line is for LED idle timer. It disables the toggle so you can turn
+                        // off LED completely if you like
                         rgb_matrix_set_flags(LED_FLAG_NONE);
                         rgb_matrix_disable();
                     } break;
@@ -77,8 +90,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-#endif // RGB_MATRIX_ENABLE
+#endif  // RGB_MATRIX_ENABLE
     }
 
-    return process_record_encoder(keycode, record) && process_record_secrets(keycode, record) && process_record_fun(keycode, record);
+    return process_record_encoder(keycode, record) && process_record_secrets(keycode, record) &&
+           process_record_fun(keycode, record);
 }

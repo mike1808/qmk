@@ -15,8 +15,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "mike1808.h"
-#include "process_record.h"
-#include "rgb_matrix_ledmaps.h"
+
+
+const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+    [JK_ESC] = COMBO(jk_combo, KC_ESC),
+};
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -27,15 +32,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //      Caps     A        S        D        F        G        H        J        K        L        ;        "                 Enter             PgDn
 //      Sh_L              Z        X        C        V        B        N        M        ,        .        ?                 Sh_R     Up       End
 //      Ct_L     Win_L    Alt_L                               SPACE                               Alt_R    FN       Ct_R     Left     Down     Right
-
-
-    // The FN key by default maps to a momentary toggle to layer 1 to provide access to the RESET key (to put the board into bootloader mode). Without
-    // this mapping, you have to open the case to hit the button on the bottom of the PCB (near the USB cable attachment) while plugging in the USB
-    // cable to get the board into bootloader mode - definitely not fun when you're working on your QMK builds. Remove this and put it back to KC_RGUI
-    // if that's your preference.
-    //
-    // To put the keyboard in bootloader mode, use FN+backslash. If you accidentally put it into bootloader, you can just unplug the USB cable and
-    // it'll be back to normal when you plug it back in.
     [LINUX] = LAYOUT(
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           KC_MUTE,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,          KC_HOME,
@@ -61,15 +57,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
         _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
         _______, KC_LALT, KC_LGUI,                            _______,                            _______, _______, _______, _______, _______, _______
-    ),
-
-    [FN_LOCK_LAYER] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MPRV, KC_MPLY, KC_MNXT, KC_PSCR,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,            _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
-        _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
-        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
     ),
 
     [FUNCTIONS] = LAYOUT(
