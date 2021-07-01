@@ -2,6 +2,7 @@
 #include "mike1808.h"
 #include "print.h"
 #include "utils.h"
+#include "rgb_matrix_ledmaps.h"
 
 typedef void (*encoder_callback)(void);
 
@@ -32,11 +33,22 @@ void volume_down() {
 bool encoder_update_user(uint8_t index, bool clockwise) {
     dprintf("current encoder state is: %d\n", state);
 
+#ifdef RGB_MATRIX_LEDMAPS_ENABLED
+// disable layers so we can adjust RGB effects
+rgb_matrix_layers_disable();
+#endif // RGB_MATRIX_LEDMAPS_ENABLED
+
     if (clockwise) {
         (*encoder_mapping[state][0])();
     } else {
         (*encoder_mapping[state][1])();
     }
+
+#ifdef RGB_MATRIX_LEDMAPS_ENABLED
+// disable layers so we can adjust RGB effects
+rgb_matrix_layers_enable();
+#endif // RGB_MATRIX_LEDMAPS_ENABLED
+
     return true;
 }
 
@@ -45,6 +57,11 @@ bool process_record_encoder(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_RGB_ENC_HUE ... KC_RGB_ENC_EFFECT:
             if (record->event.pressed) {
+#ifdef RGB_MATRIX_LEDMAPS_ENABLED
+                // disable layers so we can adjust RGB effects
+                rgb_matrix_layers_disable();
+#endif // RGB_MATRIX_LEDMAPS_ENABLED
+
                 switch (keycode) {
                     case KC_RGB_ENC_HUE:
                         state = ENCODER_RGB_HUE;
@@ -63,6 +80,10 @@ bool process_record_encoder(uint16_t keycode, keyrecord_t *record) {
                         break;
                 }
             } else {
+#ifdef RGB_MATRIX_LEDMAPS_ENABLED
+// disable layers so we can adjust RGB effects
+                rgb_matrix_layers_enable();
+#endif // RGB_MATRIX_LEDMAPS_ENABLED
                 state = ENCODER_DEFAULT;
                 store_rgb_state_to_eeprom();
             }

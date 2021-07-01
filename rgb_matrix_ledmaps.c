@@ -3,11 +3,17 @@
 __attribute__((weak)) void rgb_matrix_indicators_keymap(void) { return; }
 __attribute__((weak)) void rgb_matrix_indicators_advanced_keymap(uint8_t led_min, uint8_t led_max) { return; }
 
+#ifdef RGB_MATRIX_LEDMAPS_ENABLED
+
+static bool enabled = true;
+
+#endif  // RGB_MATRIX_LEDMAPS_ENABLED
+
 void rgb_matrix_indicators_user(void) { rgb_matrix_indicators_keymap(); }
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #ifdef RGB_MATRIX_LEDMAPS_ENABLED
 
-    if (rgb_matrix_is_enabled()) {
+    if (rgb_matrix_is_enabled() && enabled) {
         set_layer_rgb(led_min, led_max, get_highest_layer(layer_state | default_layer_state));
     }
 
@@ -18,21 +24,29 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #ifdef RGB_MATRIX_LEDMAPS_ENABLED
 
 void set_layer_rgb(uint8_t led_min, uint8_t led_max, int layer) {
-    for (int r = 0; r < MATRIX_ROWS; r++) {
-        for (int c = 0; c < MATRIX_COLS; c++) {
-            HSV hsv = {
-                .h = pgm_read_byte(&ledmaps[layer][r][c][0]),
-                .s = pgm_read_byte(&ledmaps[layer][r][c][1]),
-                .v = pgm_read_byte(&ledmaps[layer][r][c][2]),
-            };
+    const rgb_matrix_layer *l = &ledmaps[layer];
 
-            if (hsv.h || hsv.s || hsv.v) {
-                RGB     rgb       = hsv_to_rgb(hsv);
-                float   f         = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-                uint8_t led_index = g_led_config.matrix_co[r][c];
-                RGB_MATRIX_INDICATOR_SET_COLOR(led_index, f * rgb.r, f * rgb.g, f * rgb.b);
-            }
+    for (int i = 0; i < DRIVER_LED_TOTAL; i++) {
+        HSV hsv = {
+            .h = (l->layout[i][0]),
+            .s = (l->layout[i][1]),
+            .v = (l->layout[i][2]),
+        };
+
+        if (hsv.h || hsv.s || hsv.v) {
+            RGB     rgb       = hsv_to_rgb(hsv);
+            float   f         = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, f * rgb.r, f * rgb.g, f * rgb.b);
         }
     }
 }
+
+void rgb_matrix_layers_enable() {
+    enabled = true;
+}
+
+void rgb_matrix_layers_disable() {
+    enabled = false;
+}
+
 #endif  // RGB_MATRIX_LEDMAPS_ENABLED
